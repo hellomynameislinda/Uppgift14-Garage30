@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Uppgift14_Garage30.Data;
 namespace Uppgift14_Garage30
 {
     public class Program
@@ -5,6 +8,8 @@ namespace Uppgift14_Garage30
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            builder.Services.AddDbContext<Uppgift14_Garage30Context>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("Uppgift14_Garage30Context") ?? throw new InvalidOperationException("Connection string 'Uppgift14_Garage30Context' not found.")));
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
