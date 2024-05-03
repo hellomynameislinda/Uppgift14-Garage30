@@ -17,10 +17,11 @@ namespace Uppgift14_Garage30.Validations
                     return new ValidationResult(errorMessageSame);
                 }
                 //check if last name contais just characters
-                if(IsAlphabetical(input))
+                if(!IsAlphabetical(input))
                 {
                     return new ValidationResult(errorMessageFormat);
                 }
+                return ValidationResult.Success;
             }
             return new ValidationResult("Something went wrong!");  
         }
