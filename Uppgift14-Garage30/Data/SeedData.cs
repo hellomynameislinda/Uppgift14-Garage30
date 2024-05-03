@@ -66,7 +66,7 @@ namespace Uppgift14_Garage30.Data
 
                 DateTime rndDOB = DateTime.Now.AddYears(rnd.Next(-85, -15)).AddMonths(rnd.Next(12)).AddDays(rnd.Next(31));
                 string rndFour = $"{i}".PadLeft(4, '0');
-                var rndPersonalId = $"{rndDOB.ToString("yMMdd")}{rndFour}";
+                var rndPersonalId = $"{rndDOB.ToString("yyMMdd")}{rndFour}";
                 members.Add(new Member
                 {
                     PersonalId = rndPersonalId,
