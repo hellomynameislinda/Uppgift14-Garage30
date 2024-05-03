@@ -12,12 +12,12 @@ namespace Uppgift14_Garage30.Models
 
         // Foreign keys
         public int VehicleTypeId { get; set; }
-        public int MemberId { get; set; }
+        public string PersonalId { get; set; }
 
         // Navigational properties, the one side of one-to-one/one-to-many
         public VehicleType VehicleType { get; set; }
         public Member Member { get; set; }
-        public CurrentParking CurrentParking { get; set; }
+        public CurrentParking? CurrentParking { get; set; }
 
     }
 }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Uppgift14_Garage30.Data;
 
@@ -11,9 +12,11 @@ using Uppgift14_Garage30.Data;
 namespace Uppgift14_Garage30.Migrations
 {
     [DbContext(typeof(Uppgift14_Garage30Context))]
-    partial class Uppgift14_Garage30ContextModelSnapshot : ModelSnapshot
+    [Migration("20240503080728_VehicleChanges")]
+    partial class VehicleChanges
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
