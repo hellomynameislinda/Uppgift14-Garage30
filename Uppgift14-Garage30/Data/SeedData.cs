@@ -1,6 +1,7 @@
 ﻿using Bogus;
 using Bogus.Extensions.Sweden;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Cryptography;
 using Uppgift14_Garage30.Models;
 
 namespace Uppgift14_Garage30.Data
@@ -23,7 +24,7 @@ namespace Uppgift14_Garage30.Data
             var vehicles = SeedVehicles(60, vehicleTypes, members);
             await context.AddRangeAsync(vehicles);
 
-            var currentParking = SeedCurrentParking(20, vehicleTypes);
+            var currentParking = SeedCurrentParking(vehicles);
             await context.AddRangeAsync(currentParking);
 
             await context.SaveChangesAsync();
@@ -115,6 +116,18 @@ namespace Uppgift14_Garage30.Data
         {
             var currentParking = new List<CurrentParking>();
 
+            List<Vehicle> tmpVehicles = vehicles.ToList();
+
+            Random rnd = new Random();
+
+            for (int i = 0; i < tmpVehicles.Count; i+=3)
+            {
+                currentParking.Add(new CurrentParking
+                {
+                    RegistrationNumber = tmpVehicles[i].RegistrationNumber,
+                    ParkingStarted = DateTime.Now.AddMinutes(rnd.Next(-2880, 0)) // Randomize within the last 48 hours
+                });
+            }
             return currentParking;
         }
     }
