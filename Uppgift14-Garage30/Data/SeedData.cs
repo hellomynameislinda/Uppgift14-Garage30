@@ -14,20 +14,17 @@ namespace Uppgift14_Garage30.Data
         {
             faker = new Faker("sv");
 
-            if (!await context.VehicleType.AnyAsync()) // If VehicleTable is empty, add new vehicle types
-            {
-                await context.AddRangeAsync(SeedVehicleTypes());
-            }
+            var vehicleTypes = SeedVehicleTypes();
+            await context.AddRangeAsync(vehicleTypes);
 
-            if (!await context.Member.AnyAsync())
-            {
-                await context.AddRangeAsync(SeedMembers(20));
-            }
+            var members = SeedMembers(60);
+            await context.AddRangeAsync(members);
 
-            if (!await context.Vehicle.AnyAsync())
-            {
-                await context.AddRangeAsync(SeedVehicles(20));
-            }
+            var vehicles = SeedVehicles(60, vehicleTypes, members);
+            await context.AddRangeAsync(vehicles);
+
+            var currentParking = SeedCurrentParking(20, vehicleTypes);
+            await context.AddRangeAsync(currentParking);
 
             await context.SaveChangesAsync();
 
@@ -67,7 +64,7 @@ namespace Uppgift14_Garage30.Data
                 // are made up of the counter, with leading zeros.
 
                 DateTime rndDOB = DateTime.Now.AddYears(rnd.Next(-85, -15)).AddMonths(rnd.Next(12)).AddDays(rnd.Next(31));
-                string rndFour= $"{i}".PadLeft(4, '0');
+                string rndFour = $"{i}".PadLeft(4, '0');
                 var rndPersonalId = $"{rndDOB.ToString("yMMdd")}{rndFour}";
                 members.Add(new Member
                 {
@@ -81,15 +78,44 @@ namespace Uppgift14_Garage30.Data
             return members;
         }
 
-        private static IEnumerable<Vehicle> SeedVehicles(int seedAmount)
+        private static IEnumerable<Vehicle> SeedVehicles(int seedAmount, IEnumerable<VehicleType> vehicleTypes, IEnumerable<Member> members)
         {
             var vehicles = new List<Vehicle>();
 
+            List<VehicleType> tmpVehicleTypes = vehicleTypes.ToList();
+            List<Member> tmpMembers = members.ToList();
+
+            char[] validLetters = "ABCDEFGHJKLMNOPRS0TUWXYZ".ToCharArray();
 
 
+            Random rnd = new Random();
+
+            for (int i = 0; i < seedAmount; i++)
+            {
+                string regNumber = $"{validLetters[rnd.Next(0, validLetters.Length)]}" +
+                    $"{validLetters[rnd.Next(0, validLetters.Length)]}" +
+                    $"{validLetters[rnd.Next(0, validLetters.Length)]}" +
+                    $"{rnd.Next(0, 9)}" +
+                    $"{rnd.Next(0, 9)}" +
+                    $"{rnd.Next(0, 9)}";
+                vehicles.Add(new Vehicle
+                {
+                    RegistrationNumber = regNumber,
+                    Make = faker.Vehicle.Manufacturer(),
+                    Model = faker.Vehicle.Model(),
+                    Color = faker.Commerce.Color(),
+                    VehicleType = tmpVehicleTypes[rnd.Next(0, tmpVehicleTypes.Count)],
+                    Member = tmpMembers[rnd.Next(0, tmpMembers.Count)]
+                });
+            }
             return vehicles;
         }
 
-        // TODO: Seed current parking
+        private static IEnumerable<CurrentParking> SeedCurrentParking(IEnumerable<Vehicle> vehicles)
+        {
+            var currentParking = new List<CurrentParking>();
+
+            return currentParking;
+        }
     }
 }

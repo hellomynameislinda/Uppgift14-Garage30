@@ -1,4 +1,5 @@
 ﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.EntityFrameworkCore;
 using Uppgift14_Garage30.Data;
 
 namespace Uppgift14_Garage30.Extensions
@@ -12,6 +13,9 @@ namespace Uppgift14_Garage30.Extensions
             {
                 var serviceProvider = scope.ServiceProvider;
                 var context = serviceProvider.GetRequiredService<Uppgift14_Garage30Context>();
+
+                await context.Database.EnsureDeletedAsync();
+                await context.Database.MigrateAsync();
 
                 try
                 {
