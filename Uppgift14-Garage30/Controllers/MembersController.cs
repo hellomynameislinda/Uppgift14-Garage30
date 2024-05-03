@@ -53,20 +53,15 @@ namespace Uppgift14_Garage30.Controllers
         [ModelStateIsValid]
         public async Task<IActionResult> Create(MemberCreateViewModel viewModel)
         {
-
-            if (ModelState.IsValid)
+            var member = new Member
             {
-                var member = new Member
-                {
-                    PersonalId = viewModel.PersonalId,
-                    FirstName = viewModel.FirstName,
-                    LastName = viewModel.LastName,
-                };
-                _context.Member.Add(member);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(viewModel);
+                PersonalId = viewModel.PersonalId,
+                FirstName = viewModel.FirstName,
+                LastName = viewModel.LastName,
+            };
+            _context.Member.Add(member);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Members/Edit/5
