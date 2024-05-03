@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Uppgift14_Garage30.Data;
+using Uppgift14_Garage30.Filters;
 using Uppgift14_Garage30.Models;
 
 namespace Uppgift14_Garage30.Controllers
@@ -54,15 +50,23 @@ namespace Uppgift14_Garage30.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("PersonalId,FirstName,LastName")] Member member)
+        [ModelStateIsValid]
+        public async Task<IActionResult> Create(MemberCreateViewModel viewModel)
         {
+
             if (ModelState.IsValid)
             {
-                _context.Add(member);
+                var member = new Member
+                {
+                    PersonalId = viewModel.PersonalId,
+                    FirstName = viewModel.FirstName,
+                    LastName = viewModel.LastName,
+                };
+                _context.Member.Add(member);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(member);
+            return View(viewModel);
         }
 
         // GET: Members/Edit/5
