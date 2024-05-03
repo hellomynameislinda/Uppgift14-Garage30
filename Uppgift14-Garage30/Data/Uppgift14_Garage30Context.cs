@@ -29,6 +29,7 @@ namespace Uppgift14_Garage30.Data
                 .WithOne(e => e.Vehicle)
                 .HasForeignKey<CurrentParking>(e => e.RegistrationNumber);
         }
+        public DbSet<Uppgift14_Garage30.Models.Vehicle> Vehicle { get; set; } = default!;
 
     }
 }
