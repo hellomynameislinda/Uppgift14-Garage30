@@ -10,7 +10,7 @@ namespace Uppgift14_Garage30.Validations
         {
             var context = validationContext.GetRequiredService<Uppgift14_Garage30Context>();
             const string errorMessage = "Your Personal Id is registered already";
-            const string errorMessageFormat = "Your Personal Id nuumber must contain 6 numbers";
+            const string errorMessageFormat = "Your Personal Id number must contain 10 numbers";
 
             if (value is string input && !string.IsNullOrEmpty(input))
             {
@@ -19,7 +19,7 @@ namespace Uppgift14_Garage30.Validations
                 {
                     return new ValidationResult(errorMessage);
                 }
-                if(input.Length !=6 && input.All(char.IsDigit))
+                if(input.Length != 10 && input.All(char.IsDigit))
                 {
                     return new ValidationResult(errorMessageFormat);
                 }
