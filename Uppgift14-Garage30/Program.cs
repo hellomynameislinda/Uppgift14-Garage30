@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Uppgift14_Garage30.Data;
-using Uppgift14_Garage30.Services;
 namespace Uppgift14_Garage30
 {
     public class Program
@@ -14,8 +13,6 @@ namespace Uppgift14_Garage30
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-
-            builder.Services.AddScoped<IVehicleTypeService, VehicleTypeService>();
 
             var app = builder.Build();
 
