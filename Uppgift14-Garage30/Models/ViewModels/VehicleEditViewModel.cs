@@ -8,7 +8,7 @@ namespace Uppgift14_Garage30.Models.ViewModels
     public class VehicleEditViewModel
     {
         [Display(Name = "Registration Number")]
-        public string RegistrationNumber { get; set; }
+        public virtual string RegistrationNumber { get; set; }
         public string Make { get; set; }
         public string Model { get; set; }
         public string Color { get; set; }

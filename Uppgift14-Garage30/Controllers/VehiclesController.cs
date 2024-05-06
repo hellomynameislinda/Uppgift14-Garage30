@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Uppgift14_Garage30.Data;
+using Uppgift14_Garage30.Extensions;
 using Uppgift14_Garage30.Filters;
 using Uppgift14_Garage30.Models;
 using Uppgift14_Garage30.Models.ViewModels;
@@ -65,7 +66,7 @@ namespace Uppgift14_Garage30.Controllers
         [ModelStateIsValid]
         public async Task<IActionResult> Create([Bind("RegistrationNumber,Make,Model,Color,VehicleTypeId,MemberPersonalId")] VehicleCreateViewModel vehicleVM)
         {
-            Vehicle vehicle = await VehicleCreateVMToVehicle(vehicleVM);
+            Vehicle vehicle = await vehicleVM.VehicleEditVMToVehicle(_context);
             _context.Add(vehicle);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
@@ -85,7 +86,7 @@ namespace Uppgift14_Garage30.Controllers
                 return NotFound();
             }
             ViewData["VehicleTypeId"] = new SelectList(_context.VehicleType, "Id", "Name", vehicle.VehicleTypeId);
-            return View(VehicleToVehicleEditVM(vehicle));
+            return View(vehicle.VehicleToVehicleEditVM());
         }
 
         // POST: Vehicles/Edit/5
@@ -105,7 +106,7 @@ namespace Uppgift14_Garage30.Controllers
             {
                 try
                 {
-                    Vehicle vehicle = await VehicleEditVMToVehicle(vehicleVM);
+                    Vehicle vehicle = await vehicleVM.VehicleEditVMToVehicle(_context);
                     _context.Update(vehicle);
                     await _context.SaveChangesAsync();
                 }
@@ -164,62 +165,6 @@ namespace Uppgift14_Garage30.Controllers
         {
             return _context.Vehicle.Any(e => e.RegistrationNumber == id);
         }
-
-        private async Task<Vehicle> VehicleCreateVMToVehicle(VehicleCreateViewModel vehicleVM)
-        {
-            VehicleType vehicleType = await _context.VehicleType.FirstOrDefaultAsync(vt => vt.Id == vehicleVM.VehicleTypeId);
-            Member member = await _context.Member.FirstOrDefaultAsync(m => m.PersonalId == vehicleVM.MemberPersonalId);
-            return new Vehicle()
-            {
-                RegistrationNumber = vehicleVM.RegistrationNumber,
-                Make = vehicleVM.Make,
-                Model = vehicleVM.Model,
-                Color = vehicleVM.Color,
-                VehicleTypeId = vehicleVM.VehicleTypeId,
-                MemberPersonalId = vehicleVM.MemberPersonalId,
-                VehicleType = vehicleType,
-                Member = member
-            };
-        }
-
-        private async Task<Vehicle> VehicleEditVMToVehicle(VehicleEditViewModel vehicleVM)
-        {
-            VehicleType vehicleType = await _context.VehicleType.FirstOrDefaultAsync(vt => vt.Id == vehicleVM.VehicleTypeId);
-            Member member = await _context.Member.FirstOrDefaultAsync(m => m.PersonalId == vehicleVM.MemberPersonalId);
-            return new Vehicle()
-            {
-                RegistrationNumber = vehicleVM.RegistrationNumber,
-                Make = vehicleVM.Make,
-                Model = vehicleVM.Model,
-                Color = vehicleVM.Color,
-                VehicleTypeId = vehicleVM.VehicleTypeId,
-                MemberPersonalId = vehicleVM.MemberPersonalId,
-                VehicleType = vehicleType,
-                Member = member
-            };
-        }
-
-        private static VehicleCreateViewModel VehicleToVehicleCreateVM(Vehicle vehicle)
-            => new()
-            {
-                RegistrationNumber = vehicle.RegistrationNumber,
-                Make = vehicle.Make,
-                Model = vehicle.Model,
-                Color = vehicle.Color,
-                VehicleTypeId = vehicle.VehicleTypeId,
-                MemberPersonalId = vehicle.MemberPersonalId
-            };
-
-        private static VehicleEditViewModel VehicleToVehicleEditVM(Vehicle vehicle)
-            => new()
-            {
-                RegistrationNumber = vehicle.RegistrationNumber,
-                Make = vehicle.Make,
-                Model = vehicle.Model,
-                Color = vehicle.Color,
-                VehicleTypeId = vehicle.VehicleTypeId,
-                MemberPersonalId = vehicle.MemberPersonalId
-            };
 
         // ParkedVehiclesOverview
 
