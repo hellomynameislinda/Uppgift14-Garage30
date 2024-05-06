@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Uppgift14_Garage30.Data;
+using Uppgift14_Garage30.Filters;
 using Uppgift14_Garage30.Models;
 using Uppgift14_Garage30.Models.ViewModels;
 
@@ -61,18 +62,13 @@ namespace Uppgift14_Garage30.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [ModelStateIsValid]
         public async Task<IActionResult> Create([Bind("RegistrationNumber,Make,Model,Color,VehicleTypeId,MemberPersonalId")] VehicleCreateViewModel vehicleVM)
         {
-            if (ModelState.IsValid)
-            {
-                Vehicle vehicle = await VehicleCreateVMToVehicle(vehicleVM);
-                _context.Add(vehicle);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["MemberPersonalId"] = new SelectList(_context.Member, "PersonalId", "PersonalId", vehicleVM.MemberPersonalId);
-            ViewData["VehicleTypeId"] = new SelectList(_context.VehicleType, "Id", "Name", vehicleVM.VehicleTypeId);
-            return View(vehicleVM);
+            Vehicle vehicle = await VehicleCreateVMToVehicle(vehicleVM);
+            _context.Add(vehicle);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Vehicles/Edit/5
