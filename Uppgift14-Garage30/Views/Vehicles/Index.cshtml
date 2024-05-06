@@ -13,6 +13,15 @@
     <thead>
         <tr>
             <th>
+                @Html.DisplayNameFor(model => model.RegistrationNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Member)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.VehicleType)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Make)
             </th>
             <th>
@@ -21,18 +30,21 @@
             <th>
                 @Html.DisplayNameFor(model => model.Color)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.VehicleType)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Member)
-            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.RegistrationNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Member.PersonalId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.VehicleType.Id)
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Make)
             </td>
@@ -41,12 +53,6 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Color)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.VehicleType.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Member.PersonalId)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.RegistrationNumber">Edit</a> |
