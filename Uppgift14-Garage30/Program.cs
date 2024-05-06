@@ -38,7 +38,7 @@ namespace Uppgift14_Garage30
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Members}/{action=Create}/{id?}");
+                pattern: "{controller=Home}/{action=Index}/{id?}");
 
             app.Run();
         }
