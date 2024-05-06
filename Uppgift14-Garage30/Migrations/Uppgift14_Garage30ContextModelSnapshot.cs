@@ -53,7 +53,7 @@ namespace Uppgift14_Garage30.Migrations
 
                     b.HasKey("PersonalId");
 
-                    b.ToTable("Member");
+                    b.ToTable("Member", (string)null);
                 });
 
             modelBuilder.Entity("Uppgift14_Garage30.Models.Vehicle", b =>
@@ -86,7 +86,7 @@ namespace Uppgift14_Garage30.Migrations
 
                     b.HasIndex("VehicleTypeId");
 
-                    b.ToTable("Vehicle");
+                    b.ToTable("Vehicle", (string)null);
                 });
 
             modelBuilder.Entity("Uppgift14_Garage30.Models.VehicleType", b =>
@@ -103,7 +103,7 @@ namespace Uppgift14_Garage30.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("VehicleType");
+                    b.ToTable("VehicleType", (string)null);
                 });
 
             modelBuilder.Entity("Uppgift14_Garage30.Models.CurrentParking", b =>

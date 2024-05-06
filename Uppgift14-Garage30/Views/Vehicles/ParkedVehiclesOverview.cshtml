@@ -1,0 +1,38 @@
+﻿@model IEnumerable<Uppgift14_Garage30.Models.ParkedVehicleViewModel>
+
+@{
+    ViewData["Title"] = "ParkedVehiclesOverview";
+    
+}
+
+<h1>ParkedVehiclesOverview</h1>
+
+
+
+
+
+<table>
+    <thead>
+        <tr>
+            <th>Full Name</th>
+            <th>Personal ID</th>
+            <th>Num of Vehicles</th>
+            <th>Vehicle Type</th>
+            <th>Reg Number</th>
+            <th>Parking Time</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var vehicle in Model)
+        {
+            <tr>
+                <td>@vehicle.OwnerFullName</td>
+                <td>@vehicle.PersonalId</td>
+                <td>@vehicle.NumberOfVehicles</td>
+                <td>@vehicle.VehicleType</td>
+                <td>@vehicle.RegistrationNumber</td>
+                <td>@string.Format("{0} days, {1} hours, {2} minutes", vehicle.ParkingTime.Days, vehicle.ParkingTime.Hours, vehicle.ParkingTime.Minutes)</td>
+            </tr>
+        }
+    </tbody>
+</table>
