@@ -166,5 +166,28 @@ namespace Uppgift14_Garage30.Controllers
         {
             return _context.Vehicle.Any(e => e.RegistrationNumber == id);
         }
+
+        // ParkedVehiclesOverview
+
+        public ActionResult ParkedVehiclesOverview()
+        {
+              var parkedVehicles = _context.Vehicle
+                  .Where(v => v.CurrentParking != null) // Ensure only vehicles with parking are selected
+                  .Select(v => new ParkedVehicleViewModel
+                  {
+                      OwnerFullName = v.Member.FirstName + " " + v.Member.LastName,
+                      PersonalId = v.MemberPersonalId,
+                      NumberOfVehicles = v.Member.Vehicles.Count,
+                      VehicleType = v.VehicleType.Name,
+                      RegistrationNumber = v.RegistrationNumber,
+                      ParkingTime = DateTime.Now - (v.CurrentParking != null ? v.CurrentParking.ParkingStarted : DateTime.Now) // Protects against null
+                  })
+                  .ToList();
+
+              return View(parkedVehicles);
+           
+        }
+          
+
     }
 }

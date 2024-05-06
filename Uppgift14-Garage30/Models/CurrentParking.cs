@@ -8,6 +8,8 @@ namespace Uppgift14_Garage30.Models
         public string RegistrationNumber { get; set; }
         public DateTime ParkingStarted { get; set; } = DateTime.Now;
 
+       
+
         // Navigational property one-to-one
         public Vehicle Vehicle { get; set; }
     }

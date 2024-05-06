@@ -17,7 +17,11 @@ namespace Uppgift14_Garage30.Models
         // Navigational properties, the one side of one-to-one/one-to-many
         public VehicleType VehicleType { get; set; }
         public Member Member { get; set; }
+
+      
         public CurrentParking? CurrentParking { get; set; }
+        
+
 
     }
 }
