@@ -142,7 +142,6 @@ namespace Uppgift14_Garage30.Controllers
             {
                 return NotFound();
             }
-
             return View(vehicle);
         }
 
