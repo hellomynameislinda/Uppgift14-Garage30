@@ -10,13 +10,15 @@ namespace Uppgift14_Garage30.Data
 {
     public class Uppgift14_Garage30Context : DbContext
     {
+        public DbSet<Uppgift14_Garage30.Models.VehicleType> VehicleType { get; set; } = default!;
+        public DbSet<Uppgift14_Garage30.Models.Member> Member { get; set; } = default!;
+        public DbSet<Uppgift14_Garage30.Models.Vehicle> Vehicle { get; set; } = default!;
+        public DbSet<Uppgift14_Garage30.Models.CurrentParking> CurrentParking { get; set; } = default!;
+
         public Uppgift14_Garage30Context (DbContextOptions<Uppgift14_Garage30Context> options)
             : base(options)
         {
         }
-
-        public DbSet<Uppgift14_Garage30.Models.Member> Member { get; set; } = default!;
-
 
         // TODO: Fix this relationship
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -29,7 +31,6 @@ namespace Uppgift14_Garage30.Data
                 .WithOne(e => e.Vehicle)
                 .HasForeignKey<CurrentParking>(e => e.RegistrationNumber);
         }
-        public DbSet<Uppgift14_Garage30.Models.Vehicle> Vehicle { get; set; } = default!;
 
     }
 }
