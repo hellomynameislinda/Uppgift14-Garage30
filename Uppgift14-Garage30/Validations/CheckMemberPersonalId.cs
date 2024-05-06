@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore.Query;
 using System.ComponentModel.DataAnnotations;
 using Uppgift14_Garage30.Data;
+using Uppgift14_Garage30.Models;
+
 
 namespace Uppgift14_Garage30.Validations
 {
@@ -10,15 +12,15 @@ namespace Uppgift14_Garage30.Validations
         protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
             var context = validationContext.GetRequiredService<Uppgift14_Garage30Context>();
-
+            int maxAge = 95;
+            int minAge = 18;
             const string errorMessage = "Your Personal Id is registered already";
-            const string errorMessageFormatNumber = "Your Personal Id number must contain 10 numbers.";
+            const string errorMessageFormatNumber = "Your Personal Id number must contain 12 numbers.";
             const string errorMessageFormatChar = "Your Personal Id number must contain just numbers and no characters";
-            const string errorMessageLength = "Your Personal Id number must not exceed 10 digits";
-            const string errorMessageMinAge = "You age must be over 18";
-            const string errorMessageMaxAge = "You age must be under 95";
-            const int maxAge = 95;
-            const int minAge = 18;
+            const string errorMessageLength = "Your Personal Id number must not exceed 12 digits";
+            string errorMessageMinAge = $"Your age must be over {minAge.ToString()}";
+            string errorMessageMaxAge = $"Your age must be under {maxAge.ToString()}";
+
 
             if (value is string input && !string.IsNullOrEmpty(input))
             {
