@@ -5,6 +5,8 @@ namespace Uppgift14_Garage30.Models
 {
     public class MemberCreateViewModel
     {
+        [RegularExpression(@"^[^-\s]+$", ErrorMessage = "Personal Id Number cannot contain spaces or negative values.")]
+        [StringLength(10, ErrorMessage = "Personal Id Number must be 6 characters long")]
         [Display(Name = "Personal Id Number")]
 
         [CheckMemberPersonalId]
