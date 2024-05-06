@@ -1,8 +1,6 @@
-﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.EntityFrameworkCore.Query;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using Uppgift14_Garage30.Data;
-using Uppgift14_Garage30.Models;
 
 
 namespace Uppgift14_Garage30.Validations
@@ -29,59 +27,48 @@ namespace Uppgift14_Garage30.Validations
                 {
                     return new ValidationResult(errorMessage);
                 }
-                // chech if contains characters
+                // Chech if contains characters
                 if (input.Any(char.IsLetter))
                 {
                     return new ValidationResult(errorMessageFormatChar);
                 }
-                // chech if lenght exceed 10 digits
-                if (input.Length > 10)
+                // Chech if lenght exceed 12 digits
+                if (input.Length != 12)
                 {
                     return new ValidationResult(errorMessageLength);
                 }
-                // chech if input contains only digits and has a length of 10
-                if (input.Length != 10 || !input.All(char.IsDigit))
+                // Chech if input contains only digits
+                if (!input.All(char.IsDigit))
                 {
                     return new ValidationResult(errorMessageFormatNumber);
                 }
 
-                // check if the first 2 digis are in the correct range
-                int nowYear = DateTime.Now.Year;
-                int userAge = 0;
-                string nowYearFirstTwoDigits = DateTime.Now.Year.ToString().Substring(0, 2);
-                string previousYearFirstTwoDigits = (nowYear - 100).ToString().Substring(0, 2);
+                // Calculate age
+                string PersonalNrDate = input.Substring(0, 8);
+                DateTime birthDate = DateTime.ParseExact(PersonalNrDate, "yyyyMMdd", CultureInfo.InvariantCulture);
+                DateTime currentDate = DateTime.Now.Date;
 
-                string firstTwoDigitsInput = input.Substring(0, 2);
-                int yearTransformed = int.Parse(nowYearFirstTwoDigits + firstTwoDigitsInput);
-                int previousYearTransformed = int.Parse(previousYearFirstTwoDigits + firstTwoDigitsInput);
+                //Calculate age in years
+                int age = currentDate.Year - birthDate.Year;
 
-
-                if (yearTransformed > nowYear)
+                //Check if the birthday passed current year and adjust
+                if(birthDate > currentDate.AddDays(-age))
                 {
-                    userAge  = previousYearTransformed;
-                    if((nowYear - userAge) < minAge) 
-                    {
-                        return new ValidationResult(errorMessageMinAge);
-                    }
-                    if ((nowYear - userAge) > maxAge)
-                    {
-                        return new ValidationResult(errorMessageMaxAge);
-                    }
+                    age--;
                 }
-                if (yearTransformed < nowYear)
+
+                //Check if age is within the valid range
+                if(age < minAge)
                 {
-                    userAge = yearTransformed;
-                    if ((nowYear - userAge) < minAge)
-                    {
-                        return new ValidationResult(errorMessageMinAge);
-                    }
-                    if ((nowYear - userAge) > maxAge)
-                    {
-                        return new ValidationResult(errorMessageMaxAge);
-                    }
+                    return new ValidationResult(errorMessageMinAge);
+                }
+                if (age > maxAge)
+                {
+                    return new ValidationResult(errorMessageMaxAge);
                 }
             }
             return ValidationResult.Success;
         }
     }
 }
+
