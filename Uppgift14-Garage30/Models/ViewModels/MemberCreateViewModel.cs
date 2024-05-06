@@ -1,12 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Uppgift14_Garage30.Validations;
-namespace Uppgift14_Garage30.Models
+namespace Uppgift14_Garage30.Models.ViewModels
 
 {
     public class MemberCreateViewModel
     {
         [RegularExpression(@"^[^-\s]+$", ErrorMessage = "Personal Id Number cannot contain spaces or negative values.")]
-        [StringLength(10, ErrorMessage = "Personal Id Number must be 6 characters long")]
+        [StringLength(12, ErrorMessage = "Personal Id Number must be 12 characters long")]
         [Display(Name = "Personal Id Number")]
 
         [CheckMemberPersonalId]
