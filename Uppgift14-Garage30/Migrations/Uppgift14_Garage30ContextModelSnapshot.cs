@@ -35,7 +35,7 @@ namespace Uppgift14_Garage30.Migrations
                     b.HasIndex("RegistrationNumber")
                         .IsUnique();
 
-                    b.ToTable("CurrentParking", (string)null);
+                    b.ToTable("CurrentParking");
                 });
 
             modelBuilder.Entity("Uppgift14_Garage30.Models.Member", b =>
