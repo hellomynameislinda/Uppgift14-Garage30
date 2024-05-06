@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -64,7 +65,7 @@ namespace Uppgift14_Garage30.Controllers
         {
             if (ModelState.IsValid)
             {
-                Vehicle vehicle = await vehicleVM.ToVehicle(_context);
+                Vehicle vehicle = await VehicleCreateVMToVehicle(vehicleVM);
                 _context.Add(vehicle);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -167,6 +168,23 @@ namespace Uppgift14_Garage30.Controllers
         private bool VehicleExists(string id)
         {
             return _context.Vehicle.Any(e => e.RegistrationNumber == id);
+        }
+
+        private async Task<Vehicle> VehicleCreateVMToVehicle(VehicleCreateViewModel vehicleVM)
+        {
+            VehicleType vehicleType = await _context.VehicleType.FirstOrDefaultAsync(vt => vt.Id == vehicleVM.VehicleTypeId);
+            Member member = await _context.Member.FirstOrDefaultAsync(m => m.PersonalId == vehicleVM.MemberPersonalId);
+            return new Vehicle()
+            {
+                RegistrationNumber = vehicleVM.RegistrationNumber,
+                Make = vehicleVM.Make,
+                Model = vehicleVM.Model,
+                Color = vehicleVM.Color,
+                VehicleTypeId = vehicleVM.VehicleTypeId,
+                MemberPersonalId = vehicleVM.MemberPersonalId,
+                VehicleType = vehicleType,
+                Member = member
+            };
         }
     }
 }
