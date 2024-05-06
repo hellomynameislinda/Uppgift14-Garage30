@@ -1,11 +1,22 @@
 ﻿using Bogus;
 using Bogus.Extensions.Sweden;
+using Humanizer;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
 using Uppgift14_Garage30.Models;
 
 namespace Uppgift14_Garage30.Data
 {
+    // SQL Script to test generated users in SQL Server:
+    // *************************************************
+    // SELECT m.PersonalId, m.LastName, m.FirstName, v.RegistrationNumber,
+    //     vt.Name, v.Make, v.Model, v.Color, cp.ParkingStarted FROM Vehicle v
+    // LEFT OUTER JOIN CurrentParking cp ON v.RegistrationNumber = cp.RegistrationNumber
+    // INNER JOIN VehicleType vt ON v.VehicleTypeId = vt.Id
+    // INNER JOIN Member m ON v.MemberPersonalId = m.PersonalId
+    // ORDER BY m.LastName ASC, m.FirstName ASC
+
+
     public class SeedData
     {
 
@@ -66,7 +77,7 @@ namespace Uppgift14_Garage30.Data
 
                 DateTime rndDOB = DateTime.Now.AddYears(rnd.Next(-85, -15)).AddMonths(rnd.Next(12)).AddDays(rnd.Next(31));
                 string rndFour = $"{i}".PadLeft(4, '0');
-                var rndPersonalId = $"{rndDOB.ToString("yyMMdd")}{rndFour}";
+                var rndPersonalId = $"{rndDOB.ToString("yyyyMMdd")}{rndFour}";
                 members.Add(new Member
                 {
                     PersonalId = rndPersonalId,
@@ -86,7 +97,7 @@ namespace Uppgift14_Garage30.Data
             List<VehicleType> tmpVehicleTypes = vehicleTypes.ToList();
             List<Member> tmpMembers = members.ToList();
 
-            char[] validLetters = "ABCDEFGHJKLMNOPRS0TUWXYZ".ToCharArray();
+            char[] validLetters = "ABCDEFGHJKLMNOPRSTUWXYZ".ToCharArray();
 
 
             Random rnd = new Random();
