@@ -64,10 +64,18 @@ namespace Uppgift14_Garage30.Controllers
         {
             if (ModelState.IsValid)
             {
-                Vehicle vehicle = await vehicleVM.ToVehicle(_context);
-                _context.Add(vehicle);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                // Even if this model is valid we need to check that the RegistrationNumber is unique
+                if (await _context.Vehicle.AnyAsync(v => v.RegistrationNumber == vehicleVM.RegistrationNumber))
+                {
+                    // TODO: Add error message
+                }
+                else
+                {
+                    Vehicle vehicle = await vehicleVM.ToVehicle(_context);
+                    _context.Add(vehicle);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
             }
             ViewData["MemberPersonalId"] = new SelectList(_context.Member, "PersonalId", "PersonalId", vehicleVM.MemberPersonalId);
             ViewData["VehicleTypeId"] = new SelectList(_context.VehicleType, "Id", "Name", vehicleVM.VehicleTypeId);
