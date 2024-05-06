@@ -84,9 +84,8 @@ namespace Uppgift14_Garage30.Controllers
             {
                 return NotFound();
             }
-            ViewData["MemberPersonalId"] = new SelectList(_context.Member, "PersonalId", "PersonalId", vehicle.MemberPersonalId);
-            ViewData["VehicleTypeId"] = new SelectList(_context.VehicleType, "Id", "Id", vehicle.VehicleTypeId);
-            return View(vehicle);
+            ViewData["VehicleTypeId"] = new SelectList(_context.VehicleType, "Id", "Name", vehicle.VehicleTypeId);
+            return View(VehicleToVehicleEditVM(vehicle));
         }
 
         // POST: Vehicles/Edit/5
@@ -94,9 +93,10 @@ namespace Uppgift14_Garage30.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("RegistrationNumber,Make,Model,Color,VehicleTypeId,MemberPersonalId")] Vehicle vehicle)
+        [ModelStateIsValid]
+        public async Task<IActionResult> Edit(string id, [Bind("RegistrationNumber,Make,Model,Color,VehicleTypeId,MemberPersonalId")] VehicleEditViewModel vehicleVM)
         {
-            if (id != vehicle.RegistrationNumber)
+            if (id != vehicleVM.RegistrationNumber)
             {
                 return NotFound();
             }
@@ -105,12 +105,13 @@ namespace Uppgift14_Garage30.Controllers
             {
                 try
                 {
+                    Vehicle vehicle = await VehicleEditVMToVehicle(vehicleVM);
                     _context.Update(vehicle);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!VehicleExists(vehicle.RegistrationNumber))
+                    if (!VehicleExists(vehicleVM.RegistrationNumber))
                     {
                         return NotFound();
                     }
@@ -121,9 +122,8 @@ namespace Uppgift14_Garage30.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["MemberPersonalId"] = new SelectList(_context.Member, "PersonalId", "PersonalId", vehicle.MemberPersonalId);
-            ViewData["VehicleTypeId"] = new SelectList(_context.VehicleType, "Id", "Id", vehicle.VehicleTypeId);
-            return View(vehicle);
+            ViewData["VehicleTypeId"] = new SelectList(_context.VehicleType, "Id", "Name", vehicleVM.VehicleTypeId);
+            return View(vehicleVM);
         }
 
         // GET: Vehicles/Delete/5
@@ -182,6 +182,45 @@ namespace Uppgift14_Garage30.Controllers
                 Member = member
             };
         }
+
+        private async Task<Vehicle> VehicleEditVMToVehicle(VehicleEditViewModel vehicleVM)
+        {
+            VehicleType vehicleType = await _context.VehicleType.FirstOrDefaultAsync(vt => vt.Id == vehicleVM.VehicleTypeId);
+            Member member = await _context.Member.FirstOrDefaultAsync(m => m.PersonalId == vehicleVM.MemberPersonalId);
+            return new Vehicle()
+            {
+                RegistrationNumber = vehicleVM.RegistrationNumber,
+                Make = vehicleVM.Make,
+                Model = vehicleVM.Model,
+                Color = vehicleVM.Color,
+                VehicleTypeId = vehicleVM.VehicleTypeId,
+                MemberPersonalId = vehicleVM.MemberPersonalId,
+                VehicleType = vehicleType,
+                Member = member
+            };
+        }
+
+        private static VehicleCreateViewModel VehicleToVehicleCreateVM(Vehicle vehicle)
+            => new()
+            {
+                RegistrationNumber = vehicle.RegistrationNumber,
+                Make = vehicle.Make,
+                Model = vehicle.Model,
+                Color = vehicle.Color,
+                VehicleTypeId = vehicle.VehicleTypeId,
+                MemberPersonalId = vehicle.MemberPersonalId
+            };
+
+        private static VehicleEditViewModel VehicleToVehicleEditVM(Vehicle vehicle)
+            => new()
+            {
+                RegistrationNumber = vehicle.RegistrationNumber,
+                Make = vehicle.Make,
+                Model = vehicle.Model,
+                Color = vehicle.Color,
+                VehicleTypeId = vehicle.VehicleTypeId,
+                MemberPersonalId = vehicle.MemberPersonalId
+            };
 
         // ParkedVehiclesOverview
 
