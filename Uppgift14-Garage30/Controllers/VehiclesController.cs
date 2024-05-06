@@ -184,10 +184,13 @@ namespace Uppgift14_Garage30.Controllers
                   })
                   .ToList();
 
-              return View(parkedVehicles);
-           
-        }
-          
+                return View(parkedVehicles);
+            
+
+    
+        
+
+    }         
 
     }
 }
