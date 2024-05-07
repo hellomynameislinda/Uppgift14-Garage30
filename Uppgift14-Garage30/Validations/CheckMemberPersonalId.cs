@@ -16,6 +16,7 @@ namespace Uppgift14_Garage30.Validations
             const string errorMessageFormatNumber = "Your Personal Id number must contain 12 numbers.";
             const string errorMessageFormatChar = "Your Personal Id number must contain just numbers and no characters";
             const string errorMessageLength = "Your Personal Id number must not exceed 12 digits";
+            const string errorMessageDate = "Could not extract birthdate from your Personal Id";
             string errorMessageMinAge = $"Your age must be over {minAge.ToString()}";
             string errorMessageMaxAge = $"Your age must be under {maxAge.ToString()}";
 
@@ -44,25 +45,38 @@ namespace Uppgift14_Garage30.Validations
                 }
 
                 // Calculate age
-                string PersonalNrDate = input.Substring(0, 8);
-                DateTime birthDate = DateTime.ParseExact(PersonalNrDate, "yyyyMMdd", CultureInfo.InvariantCulture);
+                string personalNrDate = input.Substring(0, 8);
+                DateTime birthDate;
                 DateTime currentDate = DateTime.Now.Date;
 
+                if (!DateTime.TryParseExact(personalNrDate, "yyyyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.None, out birthDate))
+                {
+                    //Check after ambigous if parsing fails
+                    if(DateTime.TryParseExact(personalNrDate, new[] {"MMddyy", "ddMMyy"}, CultureInfo.InvariantCulture, DateTimeStyles.None, out birthDate))
+                    {
+                        // if success continue with calculate age
+                    }
+                    else
+                    {
+                        return new ValidationResult(errorMessageDate);
+                    }
+                }
+
                 //Calculate age in years
-                int age = currentDate.Year - birthDate.Year;
+                int ageYears = currentDate.Year - birthDate.Year;
 
                 //Check if the birthday passed current year and adjust
-                if(birthDate > currentDate.AddDays(-age))
+                if(birthDate > currentDate.AddDays(-ageYears))
                 {
-                    age--;
+                    ageYears--;
                 }
 
                 //Check if age is within the valid range
-                if(age < minAge)
+                if(ageYears < minAge)
                 {
                     return new ValidationResult(errorMessageMinAge);
                 }
-                if (age > maxAge)
+                if (ageYears > maxAge)
                 {
                     return new ValidationResult(errorMessageMaxAge);
                 }
