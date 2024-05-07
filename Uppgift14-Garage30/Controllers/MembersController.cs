@@ -13,11 +13,14 @@ namespace Uppgift14_Garage30.Controllers
     public class MembersController : Controller
     {
         private readonly Uppgift14_Garage30Context _context;
-        private Member? _currentMember;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public MembersController(Uppgift14_Garage30Context context)
+        //private Member? _currentMember;
+
+        public MembersController(Uppgift14_Garage30Context context, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         // GET: Members
@@ -27,15 +30,19 @@ namespace Uppgift14_Garage30.Controllers
         }
 
         // GET: Members/Details/5
-        public async Task<IActionResult> Details()
+        public async Task<IActionResult> Details(string? id = null)
         {
-            string? id = HttpContext.Session.GetString("id");
+            // If we want the Details function without parameter we would use the line below to get
+            // the id, but defaulting it to zero if not present should be more backwards compatible
+            //string? id = HttpContext.Request.RouteValues["id"]?.ToString();
 
+            var session = _httpContextAccessor.HttpContext.Session; // Added to use session for login
+            
             if (id == null)
             {
-                if (_currentMember is not null)
+                if (session.GetString("CurrentUserId") is not null)
                 { 
-                    id = _currentMember.PersonalId;
+                    id = session.GetString("CurrentUserId");  // Added to use session for login
                 }
                 else
                 { 
@@ -155,8 +162,11 @@ namespace Uppgift14_Garage30.Controllers
                 return NotFound();
             }
 
+            var session = _httpContextAccessor.HttpContext.Session; // Added to use session for login
+            session.SetString("CurrentUserId", PersonalId); // Added to use session for login
+
             // Sätt till property
-            _currentMember = member;
+            //_currentMember = member;
             //HttpContext.Session.SetString("CurrentMemberId", PersonalId);
             //return RedirectToAction(nameof(Details), new { id = PersonalId });
             return RedirectToAction(nameof(Details));
