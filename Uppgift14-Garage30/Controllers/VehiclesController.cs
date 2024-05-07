@@ -185,9 +185,23 @@ namespace Uppgift14_Garage30.Controllers
 
         // ParkedVehiclesOverview
 
-        public ActionResult ParkedVehiclesOverview()
+        public ActionResult ParkedVehiclesOverview(string vehicleType, string registrationNumber)
         {
-              var parkedVehicles = _context.Vehicle
+
+            var query = _context.Vehicle.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(vehicleType))
+            {
+                query = query.Where(v => v.VehicleType.Name.Contains(vehicleType));
+            }
+
+            if (!string.IsNullOrWhiteSpace(registrationNumber))
+            {
+                query = query.Where(v => v.RegistrationNumber.Contains(registrationNumber));
+            }
+
+
+            var parkedVehicles = query
                   .Where(v => v.CurrentParking != null) // Ensure only vehicles with parking are selected
                   .Select(v => new ParkedVehicleViewModel
                   {
@@ -203,8 +217,6 @@ namespace Uppgift14_Garage30.Controllers
                 return View(parkedVehicles);
             
 
-    
-        
 
     }         
 
