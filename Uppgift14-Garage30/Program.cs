@@ -15,6 +15,10 @@ namespace Uppgift14_Garage30
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
+            // Services for tracking a member while logged in
+            builder.Services.AddSession();
+            builder.Services.AddHttpContextAccessor();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -26,13 +30,15 @@ namespace Uppgift14_Garage30
             }
             else
             {
-                await app.SeedDataAsync();
+                //await app.SeedDataAsync();
             }
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseSession();
 
             app.UseAuthorization();
 
