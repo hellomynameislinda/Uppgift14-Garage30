@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using Uppgift14_Garage30.Data;
 using Uppgift14_Garage30.Validations;
@@ -18,5 +19,10 @@ namespace Uppgift14_Garage30.Models.ViewModels
         public int VehicleTypeId { get; set; }
         [Display(Name = "Member Personal ID Number")]
         public string MemberPersonalId { get; set; }
+
+        // Additional properties
+        [Display(Name = "Vehicle Type")]
+        [ValidateNever]
+        public string? VehicleTypeName { get; set; } = null;
     }
 }

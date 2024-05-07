@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using Uppgift14_Garage30.Data;
 using Uppgift14_Garage30.Extensions;
 using Uppgift14_Garage30.Filters;
@@ -17,17 +18,20 @@ namespace Uppgift14_Garage30.Controllers
     public class VehiclesController : Controller
     {
         private readonly Uppgift14_Garage30Context _context;
+        private readonly IIncludableQueryable<Vehicle, VehicleType> _vehicles;
 
         public VehiclesController(Uppgift14_Garage30Context context)
         {
             _context = context;
+            _vehicles = _context.Vehicle.Include(v => v.VehicleType);
         }
 
         // GET: Vehicles
         public async Task<IActionResult> Index()
         {
-            var uppgift14_Garage30Context = _context.Vehicle.Include(v => v.Member).Include(v => v.VehicleType);
-            return View(await uppgift14_Garage30Context.ToListAsync());
+            var vehicleVMs = _vehicles.Include(v => v.Member)
+                .Select(v => v.VehicleToVehicleEditVM());
+            return View(await vehicleVMs.ToListAsync());
         }
 
         // GET: Vehicles/Details/5
@@ -38,16 +42,14 @@ namespace Uppgift14_Garage30.Controllers
                 return NotFound();
             }
 
-            var vehicle = await _context.Vehicle
-                .Include(v => v.Member)
-                .Include(v => v.VehicleType)
+            var vehicle = await _vehicles.Include(v => v.Member)
                 .FirstOrDefaultAsync(m => m.RegistrationNumber == id);
             if (vehicle == null)
             {
                 return NotFound();
             }
 
-            return View(vehicle);
+            return View(vehicle.VehicleToVehicleEditVM());
         }
 
         // GET: Vehicles/Create
@@ -135,15 +137,14 @@ namespace Uppgift14_Garage30.Controllers
                 return NotFound();
             }
 
-            var vehicle = await _context.Vehicle
+            var vehicle = await _vehicles
                 .Include(v => v.Member)
-                .Include(v => v.VehicleType)
                 .FirstOrDefaultAsync(m => m.RegistrationNumber == id);
             if (vehicle == null)
             {
                 return NotFound();
             }
-            return View(vehicle);
+            return View(vehicle.VehicleToVehicleEditVM());
         }
 
         // POST: Vehicles/Delete/5
