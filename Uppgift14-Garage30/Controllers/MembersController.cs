@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Uppgift14_Garage30.Data;
 using Uppgift14_Garage30.Filters;
 using Uppgift14_Garage30.Models;
+using Uppgift14_Garage30.Models.ViewModels;
 
 namespace Uppgift14_Garage30.Controllers
 {

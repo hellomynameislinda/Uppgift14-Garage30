@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Uppgift14_Garage30.Models;
+using Uppgift14_Garage30.Models.ViewModels;
 
 namespace Uppgift14_Garage30.Validations
 {
