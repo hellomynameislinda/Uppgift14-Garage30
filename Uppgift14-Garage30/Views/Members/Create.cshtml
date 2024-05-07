@@ -1,12 +1,11 @@
-﻿@model MemberCreateViewModel
+﻿@model Uppgift14_Garage30.Models.ViewModels.MemberCreateViewModel
 
 @{
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+<h1>Create Member</h1>
 
-<h4>Member</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -14,7 +13,7 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="PersonalId" class="control-label"></label>
-                <input asp-for="PersonalId" class="form-control" />
+                <input asp-for="PersonalId" class="form-control" placeholder="YYYYMMDDXXXX" />
                 <span asp-validation-for="PersonalId" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -28,16 +27,19 @@
                 <span asp-validation-for="LastName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
+<div class="row">
+    <div class="mt-4">
+        <a asp-action="Index" class="btn btn-primary">Back to Home Page</a>
+    </div>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
