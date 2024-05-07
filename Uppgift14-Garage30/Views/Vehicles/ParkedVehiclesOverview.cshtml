@@ -1,4 +1,5 @@
-﻿@model IEnumerable<Uppgift14_Garage30.Models.ParkedVehicleViewModel>
+﻿
+@model IEnumerable<Uppgift14_Garage30.Models.ParkedVehicleViewModel>
 
 @{
     ViewData["Title"] = "ParkedVehiclesOverview";
@@ -9,7 +10,17 @@
 
 
 
-
+<form method="get">
+    <div>
+        <label>Vehicle Type:</label>
+        <input type="text" name="vehicleType" />
+    </div>
+    <div>
+        <label>Reg Number:</label>
+        <input type="text" name="registrationNumber" />
+    </div>
+    <button type="submit">Search</button>
+</form>
 
 <table>
     <thead>
