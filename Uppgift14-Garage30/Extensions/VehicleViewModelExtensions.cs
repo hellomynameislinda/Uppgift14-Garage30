@@ -15,7 +15,8 @@ namespace Uppgift14_Garage30.Extensions
                 Model = vehicle.Model,
                 Color = vehicle.Color,
                 VehicleTypeId = vehicle.VehicleTypeId,
-                MemberPersonalId = vehicle.MemberPersonalId
+                MemberPersonalId = vehicle.MemberPersonalId,
+                VehicleTypeName = vehicle.VehicleType.Name
             };
 
         public static async Task<Vehicle> VehicleEditVMToVehicle(this VehicleEditViewModel vehicleVM, Uppgift14_Garage30Context context)
