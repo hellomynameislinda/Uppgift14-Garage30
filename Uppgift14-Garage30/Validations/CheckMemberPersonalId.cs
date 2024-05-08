@@ -55,22 +55,18 @@ namespace Uppgift14_Garage30.Validations
                 }
 
                 //Calculate age in years
-                int ageYears = currentDate.Year - birthDate.Year;
+                int age = currentDate.Year - birthDate.Year;
 
                 //Check if the birthday passed current year and adjust
-                if(birthDate > currentDate.AddDays(-ageYears))
+                if(currentDate < birthDate.AddYears(age))
                 {
-                    ageYears--;
+                    age--;
                 }
 
                 //Check if age is within the valid range
-                if(ageYears < minAge)
+                if(age < minAge)
                 {
                     return new ValidationResult(errorMessageMinAge);
-                }
-                if (ageYears > maxAge)
-                {
-                    return new ValidationResult(errorMessageMaxAge);
                 }
             }
             return ValidationResult.Success;
