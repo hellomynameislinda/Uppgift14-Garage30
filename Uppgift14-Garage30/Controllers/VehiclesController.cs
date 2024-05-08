@@ -197,7 +197,7 @@ namespace Uppgift14_Garage30.Controllers
         }
 
         // POST: Vehicles/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost, ActionName("Checkout")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CheckoutConfirmed(string id)
         {
@@ -209,6 +209,7 @@ namespace Uppgift14_Garage30.Controllers
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+            //return View("VehicleReceipt", VehicleReceiptViewModel);
         }
 
 
