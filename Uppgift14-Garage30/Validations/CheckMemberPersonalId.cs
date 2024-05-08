@@ -50,35 +50,23 @@ namespace Uppgift14_Garage30.Validations
 
                 if (!DateTime.TryParseExact(personalNrDate, "yyyyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.None, out birthDate))
                 {
-                    //Check after ambigous if parsing fails
-                    if(DateTime.TryParseExact(personalNrDate, new[] {"MMddyy", "ddMMyy"}, CultureInfo.InvariantCulture, DateTimeStyles.None, out birthDate))
-                    {
-                        // if success continue with calculate age
-                    }
-                    else
-                    {
-                        return new ValidationResult(errorMessageDate);
-                    }
+                    return new ValidationResult(errorMessageDate);
                 }
 
                 //Calculate age in years
                 DateTime currentDate = DateTime.Now.Date;
-                int ageYears = currentDate.Year - birthDate.Year;
+                int age = currentDate.Year - birthDate.Year;
 
                 //Check if the birthday passed current year and adjust
-                if(birthDate > currentDate.AddDays(-ageYears))
+                if(currentDate < birthDate.AddYears(age))
                 {
-                    ageYears--;
+                    age--;
                 }
 
                 //Check if age is within the valid range
-                if(ageYears < minAge)
+                if(age < minAge)
                 {
                     return new ValidationResult(errorMessageMinAge);
-                }
-                if (ageYears > maxAge)
-                {
-                    return new ValidationResult(errorMessageMaxAge);
                 }
             }
             return ValidationResult.Success;
