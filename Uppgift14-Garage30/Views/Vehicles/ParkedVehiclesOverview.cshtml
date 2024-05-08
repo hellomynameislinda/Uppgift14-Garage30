@@ -2,24 +2,24 @@
 @model IEnumerable<Uppgift14_Garage30.Models.ParkedVehicleViewModel>
 
 @{
-    ViewData["Title"] = "ParkedVehiclesOverview";
+    ViewData["Title"] = "All Vehicles";
     
 }
 
-<h1>ParkedVehiclesOverview</h1>
+<h1>All Vehicles</h1>
 
 
 
 <form method="get">
-    <div>
+    <div class="form-group col-4 mb-3">
         <label>Vehicle Type:</label>
-        <input type="text" name="vehicleType" />
+        <input class="form-control" type="text" name="vehicleType" />
     </div>
-    <div>
+    <div class="form-group col-4 mb-3">
         <label>Reg Number:</label>
-        <input type="text" name="registrationNumber" />
+        <input class="form-control" type="text" name="registrationNumber" />
     </div>
-    <button type="submit">Search</button>
+    <button class="btn btn-primary" type="submit">Search</button>
 </form>
 
 <table>

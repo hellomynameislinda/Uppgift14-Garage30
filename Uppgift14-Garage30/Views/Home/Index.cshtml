@@ -3,30 +3,26 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
+    <h1 class="display-4">Welcome to Garage 3.0</h1>
     <p>
-        <h3>Temporary links during development</h3>
+        <h3>Where do you want to start?</h3>
         <ul class="list-group">
             <li class="list-group-item">
                 <a class="nav-link text-dark" asp-area="" asp-controller="Members" asp-action="Login">Log in member</a>
             </li>
             <li class="list-group-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Members" asp-action="Create">Register member</a>
+            </li>
+            <li class="list-group-item">
                 <a class="nav-link text-dark" asp-area="" asp-controller="Members" asp-action="Index">View all members</a>
             </li>
             <li class="list-group-item">
-                <a class="nav-link text-dark" asp-area="" asp-controller="Members" asp-action="Create">Register member</a>
-            </li>
-
-            <li class="list-group-item">
-                <a class="nav-link text-dark" asp-area="" asp-controller="Vehicles" asp-action="Index">View all Vehicles</a>
+                <a class="nav-link text-dark" asp-area="" asp-controller="Vehicles" asp-action="ParkedVehiclesOverview">View all Vehicles</a>
             </li>
             <li class="list-group-item">
                 <a class="nav-link text-dark" asp-area="" asp-controller="Vehicles" asp-action="Create">Register vehicles</a>
             </li>
 
-            <li class="list-group-item">
-                <a class="nav-link text-dark" asp-area="" asp-controller="Vehicles" asp-action="ParkedVehiclesOverview">Admin</a>
-            </li>
         </ul>
     </p>
 </div>
