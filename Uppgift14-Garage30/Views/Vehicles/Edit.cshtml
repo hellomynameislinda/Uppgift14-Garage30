@@ -1,18 +1,29 @@
-﻿@model Uppgift14_Garage30.Models.Vehicle
+﻿@model Uppgift14_Garage30.Models.ViewModels.VehicleEditViewModel
 
 @{
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
+<h1>Edit Vehicle</h1>
 
-<h4>Vehicle</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="RegistrationNumber" />
+            <div class="form-group">
+                <label asp-for="RegistrationNumber" class="control-label"></label>
+                <input readonly asp-for="RegistrationNumber" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="MemberPersonalId" class="control-label"></label>
+                <input readonly asp-for="MemberPersonalId" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="VehicleTypeId" class="control-label"></label>
+                <select asp-for="VehicleTypeId" class="form-control" asp-items="ViewBag.VehicleTypeId"></select>
+                <span asp-validation-for="VehicleTypeId" class="text-danger"></span>
+            </div>
             <div class="form-group">
                 <label asp-for="Make" class="control-label"></label>
                 <input asp-for="Make" class="form-control" />
@@ -29,26 +40,17 @@
                 <span asp-validation-for="Color" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="VehicleTypeId" class="control-label"></label>
-                <select asp-for="VehicleTypeId" class="form-control" asp-items="ViewBag.VehicleTypeId"></select>
-                <span asp-validation-for="VehicleTypeId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="MemberPersonalId" class="control-label"></label>
-                <select asp-for="MemberPersonalId" class="form-control" asp-items="ViewBag.MemberPersonalId"></select>
-                <span asp-validation-for="MemberPersonalId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+<div class="row">
+    <div class="mt-4">
+        <a asp-action="Index" class="btn btn-primary">Back to List</a>
+    </div>
 </div>
-
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

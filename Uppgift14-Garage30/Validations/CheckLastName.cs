@@ -12,12 +12,17 @@ namespace Uppgift14_Garage30.Validations
             if (value is string input)
             {
                 // check is last name is the same as first name
-                if (validationContext.ObjectInstance is MemberCreateViewModel model && model.FirstName == input)
+                if (validationContext.ObjectInstance is MemberCreateViewModel modelCreate && modelCreate.FirstName == input)
+                {
+                    return new ValidationResult(errorMessageSame);
+                }
+                // check is last name is the same as first name
+                if (validationContext.ObjectInstance is MemberEditViewModel modelEdit && modelEdit.FirstName == input)
                 {
                     return new ValidationResult(errorMessageSame);
                 }
                 //check if last name contais just characters
-                if(!IsAlphabetical(input))
+                if (!IsAlphabetical(input))
                 {
                     return new ValidationResult(errorMessageFormat);
                 }

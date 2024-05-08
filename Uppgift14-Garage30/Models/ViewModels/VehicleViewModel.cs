@@ -5,19 +5,9 @@ using Uppgift14_Garage30.Validations;
 
 namespace Uppgift14_Garage30.Models.ViewModels
 {
-    public class VehicleCreateViewModel
+    public class VehicleCreateViewModel : VehicleEditViewModel
     {
-        [Display(Name = "Registration Number")]
         [CheckVehicleRegistrationNumber]
-        public string RegistrationNumber { get; set; }
-        public string Make { get; set; }
-        public string Model { get; set; }
-        public string Color { get; set; }
-
-        // Foreign keys
-        [Display(Name = "Vehicle Type")]
-        public int VehicleTypeId { get; set; }
-        [Display(Name = "Member Personal ID Number")]
-        public string MemberPersonalId { get; set; }
+        public override string RegistrationNumber { get; set; }
     }
 }
