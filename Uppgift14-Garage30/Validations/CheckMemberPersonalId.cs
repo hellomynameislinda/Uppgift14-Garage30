@@ -47,7 +47,6 @@ namespace Uppgift14_Garage30.Validations
                 // Calculate age
                 string personalNrDate = input.Substring(0, 8);
                 DateTime birthDate;
-                DateTime currentDate = DateTime.Now.Date;
 
                 if (!DateTime.TryParseExact(personalNrDate, "yyyyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.None, out birthDate))
                 {
@@ -63,6 +62,7 @@ namespace Uppgift14_Garage30.Validations
                 }
 
                 //Calculate age in years
+                DateTime currentDate = DateTime.Now.Date;
                 int ageYears = currentDate.Year - birthDate.Year;
 
                 //Check if the birthday passed current year and adjust
