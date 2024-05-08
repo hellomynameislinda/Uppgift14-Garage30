@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
@@ -94,8 +89,17 @@ namespace Uppgift14_Garage30.Controllers
             {
                 return NotFound();
             }
+            var viewModel = new VehicleEditViewModel
+            {
+                RegistrationNumber = vehicle.RegistrationNumber,
+                Make = vehicle.Make,
+                Model = vehicle.Model,
+                Color = vehicle.Color,
+                VehicleTypeId = vehicle.VehicleTypeId,
+                MemberPersonalId = vehicle.MemberPersonalId,
+            };
             ViewData["VehicleTypeId"] = new SelectList(_context.VehicleType, "Id", "Name", vehicle.VehicleTypeId);
-            return View(vehicle.VehicleToVehicleEditVM());
+            return View(viewModel);
         }
 
         // POST: Vehicles/Edit/5
