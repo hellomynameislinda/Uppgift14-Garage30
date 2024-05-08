@@ -65,13 +65,20 @@ namespace Uppgift14_Garage30.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [ModelStateIsValid]
         public async Task<IActionResult> Create([Bind("RegistrationNumber,Make,Model,Color,VehicleTypeId,MemberPersonalId")] VehicleCreateViewModel vehicleVM)
         {
-            Vehicle vehicle = await vehicleVM.VehicleEditVMToVehicle(_context);
-            _context.Add(vehicle);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+
+            if (ModelState.IsValid)
+            {
+                Vehicle vehicle = await vehicleVM.VehicleEditVMToVehicle(_context);
+                _context.Add(vehicle);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+
+            ViewData["MemberPersonalId"] = new SelectList(_context.Member, "PersonalId", "PersonalId", vehicleVM.MemberPersonalId);
+            ViewData["VehicleTypeId"] = new SelectList(_context.Set<VehicleType>(), "Id", "Id", vehicleVM.VehicleTypeId);
+            return View(vehicleVM);
         }
 
         // GET: Vehicles/Edit/5
