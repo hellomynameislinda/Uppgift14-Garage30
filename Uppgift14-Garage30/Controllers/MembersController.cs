@@ -170,13 +170,9 @@ namespace Uppgift14_Garage30.Controllers
                 return NotFound();
             }
 
-            var session = _httpContextAccessor.HttpContext.Session; // Added to use session for login
-            session.SetString("CurrentUserId", PersonalId); // Added to use session for login
+            var session = _httpContextAccessor.HttpContext.Session;
+            session.SetString("CurrentUserId", PersonalId);
 
-            // Sätt till property
-            //_currentMember = member;
-            //HttpContext.Session.SetString("CurrentMemberId", PersonalId);
-            //return RedirectToAction(nameof(Details), new { id = PersonalId });
             return RedirectToAction(nameof(Details));
         }
 

@@ -22,7 +22,7 @@ namespace Uppgift14_Garage30
                 options.Cookie.IsEssential = true;
             }); // Added to use session for login
 
-            builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>(); // Added to use session for login
+            builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>(); // Needed to access the session above.
 
             var app = builder.Build();
 
