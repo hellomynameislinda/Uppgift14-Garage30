@@ -1,38 +1,78 @@
-﻿@model Uppgift14_Garage30.Models.Member
+﻿@model Uppgift14_Garage30.Models.ViewModels.MemberDetailsViewModel
 
 @{
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<h1>Member - Details</h1>
 
 <div>
-    <h4>Member</h4>
-    <hr />
+
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.PersonalId)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.PersonalId)
+        </dd>
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.FirstName)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.FirstName)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.LastName)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.LastName)
         </dd>
 
-        <dt class="col-sm-2">
+        <dt class="col-sm-12">
             @Html.DisplayNameFor(model => model.Vehicles)
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-12">
 
-            @foreach (var vehicle in Model.Vehicles)
+            @if (Model.Vehicles.Any())
             {
-                @*@vehicle.Title*@
-                <a asp-controller="Vehicles" asp-action="Details" asp-route-id="@vehicle.RegistrationNumber">@vehicle.RegistrationNumber @vehicle.Make @vehicle.Model</a>
-                <br />
+                <div class="list-group my-3">
+
+
+                    @foreach (var vehicle in Model.Vehicles)
+                    {
+                        <div class="list-group-item">
+                                <h6 class="my-2">@vehicle.RegistrationNumber @vehicle.Make</h6>
+                            <small class="text-body-secondary">
+                                    @if (vehicle.CurrentParking != null)
+                                    {
+                                        <span>Parked in the garage since: @vehicle.CurrentParking.ParkingStarted.ToString("yyy-MM-dd HH:mm").</span>
+                                    }
+                                    else
+                                    {
+                                        <span>Not in the garage.</span>
+                                    }
+                                </small>
+                            <p class="my-2">
+                                <a asp-controller="Vehicles" asp-action="Details" asp-route-id="@vehicle.RegistrationNumber" class="btn btn-outline-info btn-sm">View details</a>
+                                @if (vehicle.CurrentParking != null)
+                                {
+                                    <a asp-controller="Vehicles" asp-action="CheckOut" asp-route-id="@vehicle.RegistrationNumber" class="btn btn-outline-danger btn-sm">Checkout this vehicle</a>
+                                }
+                                else
+                                {
+                                    <a asp-controller="Vehicles" asp-action="Park" asp-route-id="@vehicle.RegistrationNumber" class="btn btn-outline-dark btn-sm">Park this vehicle</a>
+                                }
+                            </p>
+                        </div>
+                    }
+                    <div class="list-group-item">
+                                <a asp-controller="Vehicles" asp-action="Create" class="btn btn-primary btn-sm">Add new vehicle</a>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <p>There are no vehicles registered to this member.</p>
             }
         </dd>
 
