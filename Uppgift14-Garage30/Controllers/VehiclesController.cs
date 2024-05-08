@@ -176,7 +176,7 @@ namespace Uppgift14_Garage30.Controllers
         }
 
 
-        // GET: Vehicles/Delete/5
+        // GET: Vehicles/Checkout/5
         public async Task<IActionResult> Checkout(string id)
         {
             if (id == null)
@@ -189,25 +189,37 @@ namespace Uppgift14_Garage30.Controllers
                 .Include(v => v.VehicleType)
                 .Include(v => v.CurrentParking)
                 .FirstOrDefaultAsync(m => m.RegistrationNumber == id);
+
             if (vehicle == null)
             {
                 return NotFound();
             }
-            return View(vehicle.VehicleToVehicleEditVM());
+
+            var checkoutViewModel = new VehicleCheckoutViewModel
+            {
+                RegistrationNumber = vehicle.RegistrationNumber,
+                Make = vehicle.Make,
+                Model = vehicle.Model,
+                MemberPersonalId = vehicle.MemberPersonalId,
+                CurrentParking = vehicle.CurrentParking
+            };
+
+            return View(checkoutViewModel);
         }
 
-        // POST: Vehicles/Delete/5
+        // POST: Vehicles/Checkout/5
         [HttpPost, ActionName("Checkout")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CheckoutConfirmed(string id)
+        public async Task<IActionResult> CheckoutConfirmed(string registrationNumber)
         {
-            var currentVehicle = await _context.CurrentParking.FindAsync(id);
+            var currentVehicle = await _context.CurrentParking.FirstOrDefaultAsync(cp => cp.RegistrationNumber == registrationNumber);
+
             if (currentVehicle != null)
             {
                 _context.CurrentParking.Remove(currentVehicle);
+                await _context.SaveChangesAsync();
             }
-
-            await _context.SaveChangesAsync();
+           
             return RedirectToAction(nameof(Index));
             //return View("VehicleReceipt", VehicleReceiptViewModel);
         }
@@ -255,7 +267,7 @@ namespace Uppgift14_Garage30.Controllers
 
         }
 
-        public ActionResult CheckOutVehicle(string registrationNumber)
+      /*  public ActionResult CheckOutVehicle(string registrationNumber)
         {
             var parking = _context.CurrentParking.Include(p => p.Vehicle)
                                                    .ThenInclude(v => v.Member)
@@ -289,6 +301,6 @@ namespace Uppgift14_Garage30.Controllers
         }
 
 
-
+        */
     }
 }

@@ -23,12 +23,7 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.MemberPersonalId)
         </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.VehicleTypeName)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.VehicleTypeName)
-        </dd>
+        
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Make)
         </dt>
@@ -41,12 +36,7 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Model)
         </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Color)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Color)
-        </dd>
+       
         <dt class="col-sm-2">
             Parked since
         </dt>
@@ -59,14 +49,9 @@
 
     </dl>
 
-    <form asp-action="Delete">
+    <form asp-action="Checkout">
         <input type="hidden" asp-for="RegistrationNumber" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <input type="submit" value="Confirm Checkout" class="btn btn-danger" /> |
         <a asp-action="Index">Back to List</a>
-
-        @if (Model.CurrentParking != null)
-        {
-            <a asp-action="CheckOutVehicle" asp-route-registrationNumber="@Model.RegistrationNumber" class="btn btn-primary">View Receipt</a>
-        }
     </form>
 </div>
