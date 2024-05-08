@@ -78,7 +78,13 @@ namespace Uppgift14_Garage30.Controllers
             {
                 return NotFound();
             }
-            return View(member);
+            var viewModel = new MemberEditViewModel
+            {
+                PersonalId = member.PersonalId,
+                FirstName = member.FirstName,
+                LastName = member.LastName
+            };
+            return View(viewModel);
         }
 
         // POST: Members/Edit/5
@@ -86,7 +92,7 @@ namespace Uppgift14_Garage30.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("PersonalId,FirstName,LastName")] Member member)
+        public async Task<IActionResult> Edit(string id, MemberEditViewModel member)
         {
             if (id != member.PersonalId)
             {
@@ -97,7 +103,16 @@ namespace Uppgift14_Garage30.Controllers
             {
                 try
                 {
-                    _context.Update(member);
+                    var existingMember = await _context.Member.FindAsync(id);
+                    if (existingMember == null)
+                    {
+                        return NotFound();
+                    }
+
+                    existingMember.FirstName = member.FirstName;
+                    existingMember.LastName = member.LastName;
+
+                    _context.Update(existingMember);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
