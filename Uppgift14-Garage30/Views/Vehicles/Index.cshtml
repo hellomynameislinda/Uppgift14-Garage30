@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Uppgift14_Garage30.Models.Vehicle>
+﻿@model IEnumerable<Uppgift14_Garage30.Models.ViewModels.VehicleEditViewModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -7,11 +7,20 @@
 <h1>Index</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Create New Vehicle</a>
 </p>
 <table class="table">
     <thead>
         <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.RegistrationNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MemberPersonalId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.VehicleTypeName)
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.Make)
             </th>
@@ -21,18 +30,21 @@
             <th>
                 @Html.DisplayNameFor(model => model.Color)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.VehicleType)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Member)
-            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.RegistrationNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MemberPersonalId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.VehicleTypeName)
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Make)
             </td>
@@ -41,12 +53,6 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Color)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.VehicleType.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Member.PersonalId)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.RegistrationNumber">Edit</a> |

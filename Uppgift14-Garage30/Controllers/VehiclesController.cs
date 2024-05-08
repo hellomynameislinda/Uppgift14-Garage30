@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using Uppgift14_Garage30.Data;
+using Uppgift14_Garage30.Extensions;
 using Uppgift14_Garage30.Filters;
 using Uppgift14_Garage30.Models;
 using Uppgift14_Garage30.Models.ViewModels;
@@ -16,17 +18,20 @@ namespace Uppgift14_Garage30.Controllers
     public class VehiclesController : Controller
     {
         private readonly Uppgift14_Garage30Context _context;
+        private readonly IIncludableQueryable<Vehicle, VehicleType> _vehicles;
 
         public VehiclesController(Uppgift14_Garage30Context context)
         {
             _context = context;
+            _vehicles = _context.Vehicle.Include(v => v.VehicleType);
         }
 
         // GET: Vehicles
         public async Task<IActionResult> Index()
         {
-            var uppgift14_Garage30Context = _context.Vehicle.Include(v => v.Member).Include(v => v.VehicleType);
-            return View(await uppgift14_Garage30Context.ToListAsync());
+            var vehicleVMs = _vehicles.Include(v => v.Member)
+                .Select(v => v.VehicleToVehicleEditVM());
+            return View(await vehicleVMs.ToListAsync());
         }
 
         // GET: Vehicles/Details/5
@@ -37,16 +42,14 @@ namespace Uppgift14_Garage30.Controllers
                 return NotFound();
             }
 
-            var vehicle = await _context.Vehicle
-                .Include(v => v.Member)
-                .Include(v => v.VehicleType)
+            var vehicle = await _vehicles.Include(v => v.Member)
                 .FirstOrDefaultAsync(m => m.RegistrationNumber == id);
             if (vehicle == null)
             {
                 return NotFound();
             }
 
-            return View(vehicle);
+            return View(vehicle.VehicleToVehicleEditVM());
         }
 
         // GET: Vehicles/Create
@@ -65,7 +68,7 @@ namespace Uppgift14_Garage30.Controllers
         [ModelStateIsValid]
         public async Task<IActionResult> Create([Bind("RegistrationNumber,Make,Model,Color,VehicleTypeId,MemberPersonalId")] VehicleCreateViewModel vehicleVM)
         {
-            Vehicle vehicle = await VehicleCreateVMToVehicle(vehicleVM);
+            Vehicle vehicle = await vehicleVM.VehicleEditVMToVehicle(_context);
             _context.Add(vehicle);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
@@ -84,9 +87,8 @@ namespace Uppgift14_Garage30.Controllers
             {
                 return NotFound();
             }
-            ViewData["MemberPersonalId"] = new SelectList(_context.Member, "PersonalId", "PersonalId", vehicle.MemberPersonalId);
-            ViewData["VehicleTypeId"] = new SelectList(_context.VehicleType, "Id", "Id", vehicle.VehicleTypeId);
-            return View(vehicle);
+            ViewData["VehicleTypeId"] = new SelectList(_context.VehicleType, "Id", "Name", vehicle.VehicleTypeId);
+            return View(vehicle.VehicleToVehicleEditVM());
         }
 
         // POST: Vehicles/Edit/5
@@ -94,9 +96,10 @@ namespace Uppgift14_Garage30.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("RegistrationNumber,Make,Model,Color,VehicleTypeId,MemberPersonalId")] Vehicle vehicle)
+        [ModelStateIsValid]
+        public async Task<IActionResult> Edit(string id, [Bind("RegistrationNumber,Make,Model,Color,VehicleTypeId,MemberPersonalId")] VehicleEditViewModel vehicleVM)
         {
-            if (id != vehicle.RegistrationNumber)
+            if (id != vehicleVM.RegistrationNumber)
             {
                 return NotFound();
             }
@@ -105,12 +108,13 @@ namespace Uppgift14_Garage30.Controllers
             {
                 try
                 {
+                    Vehicle vehicle = await vehicleVM.VehicleEditVMToVehicle(_context);
                     _context.Update(vehicle);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!VehicleExists(vehicle.RegistrationNumber))
+                    if (!VehicleExists(vehicleVM.RegistrationNumber))
                     {
                         return NotFound();
                     }
@@ -121,9 +125,8 @@ namespace Uppgift14_Garage30.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["MemberPersonalId"] = new SelectList(_context.Member, "PersonalId", "PersonalId", vehicle.MemberPersonalId);
-            ViewData["VehicleTypeId"] = new SelectList(_context.VehicleType, "Id", "Id", vehicle.VehicleTypeId);
-            return View(vehicle);
+            ViewData["VehicleTypeId"] = new SelectList(_context.VehicleType, "Id", "Name", vehicleVM.VehicleTypeId);
+            return View(vehicleVM);
         }
 
         // GET: Vehicles/Delete/5
@@ -134,16 +137,14 @@ namespace Uppgift14_Garage30.Controllers
                 return NotFound();
             }
 
-            var vehicle = await _context.Vehicle
+            var vehicle = await _vehicles
                 .Include(v => v.Member)
-                .Include(v => v.VehicleType)
                 .FirstOrDefaultAsync(m => m.RegistrationNumber == id);
             if (vehicle == null)
             {
                 return NotFound();
             }
-
-            return View(vehicle);
+            return View(vehicle.VehicleToVehicleEditVM());
         }
 
         // POST: Vehicles/Delete/5
@@ -164,23 +165,6 @@ namespace Uppgift14_Garage30.Controllers
         private bool VehicleExists(string id)
         {
             return _context.Vehicle.Any(e => e.RegistrationNumber == id);
-        }
-
-        private async Task<Vehicle> VehicleCreateVMToVehicle(VehicleCreateViewModel vehicleVM)
-        {
-            VehicleType vehicleType = await _context.VehicleType.FirstOrDefaultAsync(vt => vt.Id == vehicleVM.VehicleTypeId);
-            Member member = await _context.Member.FirstOrDefaultAsync(m => m.PersonalId == vehicleVM.MemberPersonalId);
-            return new Vehicle()
-            {
-                RegistrationNumber = vehicleVM.RegistrationNumber,
-                Make = vehicleVM.Make,
-                Model = vehicleVM.Model,
-                Color = vehicleVM.Color,
-                VehicleTypeId = vehicleVM.VehicleTypeId,
-                MemberPersonalId = vehicleVM.MemberPersonalId,
-                VehicleType = vehicleType,
-                Member = member
-            };
         }
 
         // ParkedVehiclesOverview
