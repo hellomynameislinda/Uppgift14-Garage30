@@ -51,15 +51,7 @@ namespace Uppgift14_Garage30.Validations
 
                 if (!DateTime.TryParseExact(personalNrDate, "yyyyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.None, out birthDate))
                 {
-                    //Check after ambigous if parsing fails
-                    if(DateTime.TryParseExact(personalNrDate, new[] {"MMddyy", "ddMMyy"}, CultureInfo.InvariantCulture, DateTimeStyles.None, out birthDate))
-                    {
-                        // if success continue with calculate age
-                    }
-                    else
-                    {
-                        return new ValidationResult(errorMessageDate);
-                    }
+                    return new ValidationResult(errorMessageDate);
                 }
 
                 //Calculate age in years
