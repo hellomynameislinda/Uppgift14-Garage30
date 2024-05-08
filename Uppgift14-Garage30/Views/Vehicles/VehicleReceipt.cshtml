@@ -1,0 +1,26 @@
+﻿@model Uppgift14_Garage30.Models.ViewModels.VehicleReceiptViewModel
+
+@{
+    ViewData["Title"] = "VehicleReceipt";
+   
+}
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Parking Receipt</title>
+   
+</head>
+<body>
+    <h2>Parking Receipt</h2>
+    <p>Registration Number: @Model.RegistrationNumber</p>
+    <p>Member Name: @Model.MemberName</p>
+    <p>Check-In Time: @Model.CheckInTime</p>
+    <p>Check-Out Time: @Model.CheckOutTime</p>
+    <p>Total Parking Period: @Model.TotalParkingPeriod</p>
+    <p>Price: @Model.Price</p>
+    <button onclick="window.print()">Print Receipt</button>
+</body>
+</html>
+

@@ -137,6 +137,7 @@ namespace Uppgift14_Garage30.Controllers
             var vehicle = await _context.Vehicle
                 .Include(v => v.Member)
                 .Include(v => v.VehicleType)
+                .Include(v => v.CurrentParking)
                 .FirstOrDefaultAsync(m => m.RegistrationNumber == id);
             if (vehicle == null)
             {
@@ -214,11 +215,46 @@ namespace Uppgift14_Garage30.Controllers
                   })
                   .ToList();
 
-                return View(parkedVehicles);
-            
+            return View(parkedVehicles);
 
 
-    }         
+
+        }
+
+        public ActionResult CheckOutVehicle(string registrationNumber)
+        {
+            var parking = _context.CurrentParking.Include(p => p.Vehicle)
+                                                   .ThenInclude(v => v.Member)
+                                                   .FirstOrDefault(p => p.RegistrationNumber == registrationNumber);
+
+            if (parking == null)
+            {
+                ViewBag.ErrorMessage = "No parked vehicle found for the provided registration number.";
+                return View("Error");
+            }
+
+            parking.ParkingEnded = DateTime.Now;
+
+            var receiptViewModel = new VehicleReceiptViewModel
+            {
+                RegistrationNumber = registrationNumber,
+                CheckInTime = parking.ParkingStarted,
+                CheckOutTime = parking.ParkingEnded.Value,
+                TotalParkingPeriod = parking.TotalParkingPeriod,
+                Price = parking.ParkingPrice,
+                MemberName = $"{parking.Vehicle.Member.FirstName} {parking.Vehicle.Member.LastName}"
+            };
+
+            // Remove the parking record or update it as needed
+            // _context.CurrentParkings.Remove(parking);
+            // Or just save changes if you're updating the record instead of deleting it
+            _context.SaveChanges();
+
+            // To make it printable, you'll likely return this data to a view designed for printing
+            return View("Vehiclereceipt", receiptViewModel);
+        }
+
+
 
     }
 }
