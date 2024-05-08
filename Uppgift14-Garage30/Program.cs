@@ -15,6 +15,15 @@ namespace Uppgift14_Garage30
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
+            builder.Services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            }); // Added to use session for login
+
+            builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>(); // Needed to access the session above.
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -35,6 +44,8 @@ namespace Uppgift14_Garage30
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseSession(); // Added to use session for login
 
             app.MapControllerRoute(
                 name: "default",
