@@ -173,6 +173,43 @@ namespace Uppgift14_Garage30.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+
+        // GET: Vehicles/Delete/5
+        public async Task<IActionResult> Checkout(string id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var vehicle = await _vehicles
+                .Include(v => v.Member)
+                .Include(v => v.VehicleType)
+                .Include(v => v.CurrentParking)
+                .FirstOrDefaultAsync(m => m.RegistrationNumber == id);
+            if (vehicle == null)
+            {
+                return NotFound();
+            }
+            return View(vehicle.VehicleToVehicleEditVM());
+        }
+
+        // POST: Vehicles/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CheckoutConfirmed(string id)
+        {
+            var currentVehicle = await _context.CurrentParking.FindAsync(id);
+            if (currentVehicle != null)
+            {
+                _context.CurrentParking.Remove(currentVehicle);
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+
         private bool VehicleExists(string id)
         {
             return _context.Vehicle.Any(e => e.RegistrationNumber == id);
