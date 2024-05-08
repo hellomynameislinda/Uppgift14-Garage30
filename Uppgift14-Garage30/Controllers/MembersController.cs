@@ -140,7 +140,15 @@ namespace Uppgift14_Garage30.Controllers
         // GET: Login Members
         public async Task<IActionResult> Login()
         {
-            ViewBag.Members = new SelectList(_context.Member, nameof(Member.PersonalId), nameof(Member.PersonalId));
+            var members = await _context.Member
+                .Select(m => new
+                {
+                    PersonalId = m.PersonalId,
+                    DisplayText = $"{m.PersonalId} - {m.LastName}, {m.FirstName}"
+                })
+                .ToListAsync();
+            ViewBag.Members = new SelectList(members, nameof(Member.PersonalId), "DisplayText");
+
             return View();
         }
 
