@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using System.Linq.Expressions;
 using Uppgift14_Garage30.Data;
 using Uppgift14_Garage30.Filters;
 using Uppgift14_Garage30.Models;
@@ -10,10 +13,14 @@ namespace Uppgift14_Garage30.Controllers
     public class MembersController : Controller
     {
         private readonly Uppgift14_Garage30Context _context;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public MembersController(Uppgift14_Garage30Context context)
+        //private Member? _currentMember;
+
+        public MembersController(Uppgift14_Garage30Context context, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         // GET: Members
@@ -23,15 +30,29 @@ namespace Uppgift14_Garage30.Controllers
         }
 
         // GET: Members/Details/5
-        public async Task<IActionResult> Details(string id)
+        public async Task<IActionResult> Details(string? id = null)
         {
+            // If we want the Details function without parameter we would use the line below to get
+            // the id, but defaulting it to zero if not present should be more backwards compatible
+            //string? id = HttpContext.Request.RouteValues["id"]?.ToString();
+
+            var session = _httpContextAccessor.HttpContext.Session; // Added to use session for login
+            
             if (id == null)
             {
-                return NotFound();
+                if (session.GetString("CurrentUserId") is not null)
+                { 
+                    id = session.GetString("CurrentUserId");  // Added to use session for login
+                }
+                else
+                { 
+                    return NotFound();
+                }
             }
 
             var member = await _context.Member
                 .FirstOrDefaultAsync(m => m.PersonalId == id);
+            
             if (member == null)
             {
                 return NotFound();
@@ -130,6 +151,46 @@ namespace Uppgift14_Garage30.Controllers
             }
             return View(member);
         }
+
+        // GET: Login Members
+        public async Task<IActionResult> Login()
+        {
+            var members = await _context.Member
+                .Select(m => new
+                {
+                    PersonalId = m.PersonalId,
+                    DisplayText = $"{m.PersonalId} - {m.LastName}, {m.FirstName}"
+                })
+                .ToListAsync();
+            ViewBag.Members = new SelectList(members, nameof(Member.PersonalId), "DisplayText");
+
+            return View();
+        }
+
+        // POST: Login Members
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login(MemberLoginViewModel viewModel)
+        {
+            var PersonalId = viewModel.PersonalId;
+
+            if (PersonalId == null)
+            {
+                return NoContent();  // Go back to the original login
+            }
+
+            var member = await _context.Member.FindAsync(PersonalId);
+            if (member == null)
+            {
+                return NotFound();
+            }
+
+            var session = _httpContextAccessor.HttpContext.Session;
+            session.SetString("CurrentUserId", PersonalId);
+
+            return RedirectToAction(nameof(Details));
+        }
+
 
         // GET: Members/Delete/5
         public async Task<IActionResult> Delete(string id)
