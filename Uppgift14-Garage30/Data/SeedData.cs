@@ -9,12 +9,16 @@ namespace Uppgift14_Garage30.Data
 {
     // SQL Script to test generated users in SQL Server:
     // *************************************************
-    // SELECT m.PersonalId, m.LastName, m.FirstName, v.RegistrationNumber,
-    //     vt.Name, v.Make, v.Model, v.Color, cp.ParkingStarted FROM Vehicle v
-    // LEFT OUTER JOIN CurrentParking cp ON v.RegistrationNumber = cp.RegistrationNumber
-    // INNER JOIN VehicleType vt ON v.VehicleTypeId = vt.Id
-    // INNER JOIN Member m ON v.MemberPersonalId = m.PersonalId
-    // ORDER BY m.LastName ASC, m.FirstName ASC
+    //SELECT m.PersonalId, m.LastName, m.FirstName, v.RegistrationNumber,
+    //    vt.Name, v.Make, v.Model, v.Color, cp.ParkingStarted FROM Vehicle v
+
+    //LEFT OUTER JOIN CurrentParking cp ON v.RegistrationNumber = cp.RegistrationNumber
+
+    //INNER JOIN VehicleType vt ON v.VehicleTypeId = vt.Id
+
+    //INNER JOIN Member m ON v.MemberPersonalId = m.PersonalId
+
+    //ORDER BY m.LastName ASC, m.FirstName ASC
 
 
     public class SeedData

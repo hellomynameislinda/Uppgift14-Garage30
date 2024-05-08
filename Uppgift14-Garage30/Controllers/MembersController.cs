@@ -51,6 +51,8 @@ namespace Uppgift14_Garage30.Controllers
             }
 
             var member = await _context.Member
+                .Include(m => m.Vehicles)
+                .ThenInclude(v => v.CurrentParking)
                 .FirstOrDefaultAsync(m => m.PersonalId == id);
             
             if (member == null)
@@ -58,7 +60,15 @@ namespace Uppgift14_Garage30.Controllers
                 return NotFound();
             }
 
-            return View(member);
+            var detailsViewModel = new MemberDetailsViewModel
+            {
+                PersonalId = member.PersonalId,
+                FirstName = member.FirstName,
+                LastName = member.LastName,
+                Vehicles = member.Vehicles
+            };
+
+            return View(detailsViewModel);
         }
 
         // GET: Members/Create
