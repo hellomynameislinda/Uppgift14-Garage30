@@ -151,7 +151,7 @@ namespace Uppgift14_Garage30.Controllers
             var vehicle = await _vehicles
                 .Include(v => v.Member)
                 .Include(v => v.VehicleType)
-                .Include(v => v.CurrentParking)
+         
                 .FirstOrDefaultAsync(m => m.RegistrationNumber == id);
             if (vehicle == null)
             {

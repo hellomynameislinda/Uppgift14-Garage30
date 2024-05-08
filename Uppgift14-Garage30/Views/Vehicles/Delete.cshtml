@@ -54,10 +54,7 @@
         <input type="submit" value="Delete" class="btn btn-danger" /> |
         <a asp-action="Index">Back to List</a>
 
-        @if (Model.CurrentParking != null)
-        {
-            <a asp-action="CheckOutVehicle" asp-route-registrationNumber="@Model.RegistrationNumber" class="btn btn-primary">View Receipt</a>
-        }
+   
        
     </form>
 
