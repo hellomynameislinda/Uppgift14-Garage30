@@ -26,7 +26,13 @@ namespace Uppgift14_Garage30.Controllers
         // GET: Members
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Member.ToListAsync());
+            // Sort members before returning them
+            // Members will be sorted by the first 2 letters of their first name
+            Func<Member, string> keySelector = m => m.FirstName[..2];
+            // We need to sort using ASCII case-sensitive (StringComparer.Ordinal)
+            // We need to use a stable sort; LINQ OrderBy is stable
+            var members = await _context.Member.ToListAsync();
+            return View(members.OrderBy(keySelector, StringComparer.Ordinal));
         }
 
         // GET: Members/Details/5
