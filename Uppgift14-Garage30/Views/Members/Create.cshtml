@@ -1,10 +1,10 @@
 ﻿@model Uppgift14_Garage30.Models.ViewModels.MemberCreateViewModel
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Register Member";
 }
 
-<h1>Create Member</h1>
+<h1>Register New Member</h1>
 
 <hr />
 <div class="row">
@@ -26,7 +26,7 @@
                 <input asp-for="LastName" class="form-control" />
                 <span asp-validation-for="LastName" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group py-3">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
@@ -34,7 +34,7 @@
 </div>
 <div class="row">
     <div class="mt-4">
-        <a asp-action="Index" class="btn btn-primary">Back to List</a>
+        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
     </div>
 </div>
 
