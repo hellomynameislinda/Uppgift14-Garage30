@@ -150,6 +150,8 @@ namespace Uppgift14_Garage30.Controllers
 
             var vehicle = await _vehicles
                 .Include(v => v.Member)
+                .Include(v => v.VehicleType)
+         
                 .FirstOrDefaultAsync(m => m.RegistrationNumber == id);
             if (vehicle == null)
             {
@@ -172,6 +174,56 @@ namespace Uppgift14_Garage30.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
+
+        // GET: Vehicles/Checkout/5
+        public async Task<IActionResult> Checkout(string id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var vehicle = await _vehicles
+                .Include(v => v.Member)
+                .Include(v => v.VehicleType)
+                .Include(v => v.CurrentParking)
+                .FirstOrDefaultAsync(m => m.RegistrationNumber == id);
+
+            if (vehicle == null)
+            {
+                return NotFound();
+            }
+
+            var checkoutViewModel = new VehicleCheckoutViewModel
+            {
+                RegistrationNumber = vehicle.RegistrationNumber,
+                Make = vehicle.Make,
+                Model = vehicle.Model,
+                MemberPersonalId = vehicle.MemberPersonalId,
+                CurrentParking = vehicle.CurrentParking
+            };
+
+            return View(checkoutViewModel);
+        }
+
+        // POST: Vehicles/Checkout/5
+        [HttpPost, ActionName("Checkout")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CheckoutConfirmed(string registrationNumber)
+        {
+            var currentVehicle = await _context.CurrentParking.FirstOrDefaultAsync(cp => cp.RegistrationNumber == registrationNumber);
+
+            if (currentVehicle != null)
+            {
+                _context.CurrentParking.Remove(currentVehicle);
+                await _context.SaveChangesAsync();
+            }
+           
+            return RedirectToAction(nameof(Index));
+            //return View("VehicleReceipt", VehicleReceiptViewModel);
+        }
+
 
         private bool VehicleExists(string id)
         {
@@ -209,11 +261,46 @@ namespace Uppgift14_Garage30.Controllers
                   })
                   .ToList();
 
-                return View(parkedVehicles);
-            
+            return View(parkedVehicles);
 
 
-    }         
 
+        }
+
+      /*  public ActionResult CheckOutVehicle(string registrationNumber)
+        {
+            var parking = _context.CurrentParking.Include(p => p.Vehicle)
+                                                   .ThenInclude(v => v.Member)
+                                                   .FirstOrDefault(p => p.RegistrationNumber == registrationNumber);
+
+            if (parking == null)
+            {
+                ViewBag.ErrorMessage = "No parked vehicle found for the provided registration number.";
+                return View("Error");
+            }
+
+            parking.ParkingEnded = DateTime.Now;
+
+            var receiptViewModel = new VehicleReceiptViewModel
+            {
+                RegistrationNumber = registrationNumber,
+                CheckInTime = parking.ParkingStarted,
+                CheckOutTime = parking.ParkingEnded.Value,
+                TotalParkingPeriod = parking.TotalParkingPeriod,
+                Price = parking.ParkingPrice,
+                MemberName = $"{parking.Vehicle.Member.FirstName} {parking.Vehicle.Member.LastName}"
+            };
+
+            // Remove the parking record or update it as needed
+            // _context.CurrentParkings.Remove(parking);
+            // Or just save changes if you're updating the record instead of deleting it
+            _context.SaveChanges();
+
+            // To make it printable, you'll likely return this data to a view designed for printing
+            return View("Vehiclereceipt", receiptViewModel);
+        }
+
+
+        */
     }
 }
