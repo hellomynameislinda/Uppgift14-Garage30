@@ -140,6 +140,48 @@ namespace Uppgift14_Garage30.Controllers
             return View(vehicleVM);
         }
 
+        // Vehicles/Park/5
+        public async Task<IActionResult> Park(string id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var vehicle = await _context.Vehicle.FindAsync(id);
+            if (vehicle == null)
+            {
+                return NotFound();
+            }
+            // Check if vehicle already parked
+            if(vehicle.CurrentParking != null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            // Record a new parking
+            var currentParking = new CurrentParking
+            {
+                RegistrationNumber = vehicle.RegistrationNumber,
+                ParkingStarted = DateTime.Now,
+                Vehicle = vehicle,
+            };
+            // Add parking to DB
+            _context.CurrentParking.Add(currentParking);
+
+            // Save the record
+            await _context.SaveChangesAsync();
+
+            // Create a view model for park confirmation
+            var viewModel = new VehicleParkViewModel
+            {
+                MemberPersonalId = vehicle.MemberPersonalId,
+                RegistrationNumber = vehicle.RegistrationNumber,
+            };
+
+            // Redirect to All parked Vehicles
+            return View(viewModel);
+        
+        }
+
         // GET: Vehicles/Delete/5
         public async Task<IActionResult> Delete(string id)
         {
