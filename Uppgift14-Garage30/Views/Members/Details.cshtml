@@ -56,7 +56,7 @@
                                 <a asp-controller="Vehicles" asp-action="Details" asp-route-id="@vehicle.RegistrationNumber" class="btn btn-outline-info btn-sm">View details</a>
                                 @if (vehicle.CurrentParking != null)
                                 {
-                                    <a asp-controller="Vehicles" asp-action="CheckOut" asp-route-id="@vehicle.RegistrationNumber" class="btn btn-outline-danger btn-sm">Checkout this vehicle</a>
+                                    <a asp-controller="Vehicles" asp-action="Checkout" asp-route-id="@vehicle.RegistrationNumber" class="btn btn-outline-danger btn-sm">Checkout this vehicle</a>
                                 }
                                 else
                                 {
