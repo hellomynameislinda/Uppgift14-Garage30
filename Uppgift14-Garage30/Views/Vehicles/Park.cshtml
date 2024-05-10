@@ -1,0 +1,33 @@
+﻿@model Uppgift14_Garage30.Models.ViewModels.VehicleParkViewModel
+
+@{
+    ViewData["Title"] = "Park Confirmation";
+}
+
+<h1>Park Confirmation</h1>
+
+<div>
+    <p>Vehicle with registration number @Model.RegistrationNumber has been parked successfully.</p>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.RegistrationNumber)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.RegistrationNumber)
+        </dd>
+    </dl>
+</div>
+<div class="list-group-item">
+    <p class="my-2">
+    <!-- Link to go back to the member details view -->
+    <a class="btn btn-primary" href="@Url.Action("Details", "Members", new { id = Model.MemberPersonalId })">Back to Member Details</a>
+    
+    <!-- Link to view all parked vehicles -->
+    <a class="btn btn-secondary" href="@Url.Action("ParkedVehiclesOverview", "Vehicles")">View All Parked Vehicles</a>
+    </p>
+</div>
+<div>
+    <a class="btn btn-secondary" asp-action="Index">Back to List</a>
+</div>
+
